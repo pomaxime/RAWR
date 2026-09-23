@@ -7,25 +7,16 @@ from .room import Room
 
 puzzle_1 = CodePuzzle(
     id="puzzle_1",
-
     name="L'énigme de Véloci Ruben",
-
     description=(
         "Écrivez la signification de l'inscription RAWR. "
-
         "<< Rawr, je suis Véloci Ruben le Raptor, j'ai très faim, "
         "beaucoup trop faim. "
-
         "But i'm going to wait before eating you, Rawr. "
-
         "Rawr, je veux des côtes. >>"
     ),
-
     secret_code="Raptor Affamé Want Ribs",
-
-    hints=[
-        "Tout vous est donné dans l'ordre des paroles de Véloci Ruben."
-    ],
+    hints=["Tout vous est donné dans l'ordre des paroles de Véloci Ruben."],
 )
 
 
@@ -35,39 +26,23 @@ puzzle_1 = CodePuzzle(
 
 room_1 = Room(
     id="room_1",
-
     name="Le laboratoire de Véloci Ruben",
-
     description=(
         "Vous êtes enfermés dans un laboratoire rempli de machines étranges "
         "et de dinosaures enfermés. "
-
         "Une inscription affiche RAWR. "
-
         "Un Raptor s'approche de vous et vous regarde avec insistance. "
-
         "Vous entrez dans une pièce avec un ordinateur et un cadenas. "
-
         "Pour avancer vous devrez trouver la signification de 'RAWR'. "
-
         "Pour cela, aidez-vous des instructions de Véloci Ruben. "
-
         "Le raptor vous suit et essaie d'entrer, vous l'entendez parler. "
-
         "<< Rawr, je suis Véloci Ruben le Raptor, j'ai très faim, "
         "beaucoup trop faim. "
-
         "But i'm going to wait before eating you. "
-
         "Rawr, je veux des côtes. >>"
-
         "Et oui, dans ce jeu tout peut être bilingue."
     ),
-
-    puzzles=[
-        puzzle_1
-    ],
-
+    puzzles=[puzzle_1],
     time_limit=900,
 )
 
@@ -78,27 +53,19 @@ room_1 = Room(
 
 puzzle_2 = CodePuzzle(
     id="puzzle_2",
-
-    name="Le terminal du laboratoire",
-
+    name="Le code du miroir noir",
     description=(
-        "Vous arrivez dans une salle remplie d'ordinateurs. "
-
-        "Un terminal vous demande de trouver le nombre suivant : "
-
-        "2 - 4 - 8 - 16 - ? "
-
-        "Une inscription est affichée sous l'écran : "
-
-        "\"Dans ce laboratoire, tout double.\""
+        "Un écran s'allume avec une série d'objets sur la table : "
+        "4 vis, 3 ampoules, 2 clés et 1 carte. "
+        "Le message dit : 'Ordre décroissant des quantités. "
+        "Écrivez les chiffres sans espace. Le code est la séquence.' "
+        "Quatre chiffres, sans faute.'"
     ),
-
-    secret_code="32",
-
+    secret_code="4321",
     hints=[
-        "Observez la relation entre chaque nombre.",
-        "Chaque nombre est obtenu à partir du précédent.",
-        "Le nombre suivant est le double de 16."
+        "Le code est construit à partir des nombres visibles sur la table.",
+        "Les quantités sont 4, 3, 2, 1 ; il faut les écrire dans l'ordre décroissant.",
+        "Le code final est un nombre à 4 chiffres.",
     ],
 )
 
@@ -109,24 +76,14 @@ puzzle_2 = CodePuzzle(
 
 room_2 = Room(
     id="room_2",
-
-    name="La salle des ordinateurs",
-
+    name="La salle du miroir des ombres",
     description=(
-        "La porte du laboratoire s'ouvre et vous découvrez une immense "
-        "salle remplie d'ordinateurs. "
-
-        "Au centre de la pièce, un vieux terminal clignote. "
-
-        "Un message apparaît à l'écran : "
-
-        "\"Seul celui qui comprend la suite pourra continuer.\""
+        "Vous pénétrez dans une chambre au plafond bas, aux murs recouverts de "
+        "miroirs fissurés. Sur une table, plusieurs objets sont disposés avec précision : "
+        "4 vis, 3 ampoules, 2 clés et 1 carte. Une console bloque la sortie, "
+        "et un message apparaît : 'Le système demande le code des quantités.'"
     ),
-
-    puzzles=[
-        puzzle_2
-    ],
-
+    puzzles=[puzzle_2],
     time_limit=900,
 )
 
@@ -137,28 +94,19 @@ room_2 = Room(
 
 puzzle_3 = CodePuzzle(
     id="puzzle_3",
-
-    name="Le message crypté",
-
+    name="Le générateur délirant",
     description=(
-        "Sur un bureau, vous trouvez une feuille couverte de lettres : "
-
-        "\"UDSWRU\" "
-
-        "Une note est écrite en dessous : "
-
-        "\"Véloci Ruben a déplacé chaque lettre de trois positions "
-        "dans l'alphabet.\" "
-
-        "Déchiffrez le message."
+        "Le panneau du générateur affiche : "
+        "'3 bras, 5 capteurs, 2 portes, 8 câbles. "
+        "Le code est obtenu par (capteurs + portes) × bras - câbles. "
+        "Répondez avec le résultat final.' "
+        "Le système exige un nombre entier.'"
     ),
-
-    secret_code="RAPTOR",
-
+    secret_code="13",
     hints=[
-        "Les lettres ont été déplacées dans l'alphabet.",
-        "Il faut reculer de trois lettres.",
-        "U devient R."
+        "Le calcul est bien défini sur l'écran : (5 + 2) × 3 - 8.",
+        "Commence par additionner les capteurs et les portes.",
+        "Le résultat final est un nombre à deux chiffres.",
     ],
 )
 
@@ -169,23 +117,13 @@ puzzle_3 = CodePuzzle(
 
 room_3 = Room(
     id="room_3",
-
-    name="La salle de cryptographie",
-
+    name="Le générateur de la salle noire",
     description=(
-        "Vous entrez dans une pièce sombre dont les murs sont couverts "
-        "de vieux messages codés. "
-
-        "Une seule feuille semble récente. "
-
-        "Vous comprenez rapidement qu'elle contient un message laissé "
-        "par Véloci Ruben."
+        "Cette pièce est remplie de câbles torsadés, de capteurs lumineux et de portes "
+        "semi-ouvertes. Un panneau de contrôle clignote au centre de la pièce. "
+        "La sortie est bloquée par un système qui n'accepte que des calculs précis."
     ),
-
-    puzzles=[
-        puzzle_3
-    ],
-
+    puzzles=[puzzle_3],
     time_limit=900,
 )
 
@@ -196,34 +134,18 @@ room_3 = Room(
 
 puzzle_4 = CodePuzzle(
     id="puzzle_4",
-
-    name="Les cages des dinosaures",
-
+    name="Le cœur numérique du laboratoire",
     description=(
-        "Trois cages se trouvent devant vous : "
-        "une cage rouge, une cage bleue et une cage verte. "
-
-        "Une seule contient la clé permettant de continuer. "
-
-        "Sur les cages, vous trouvez trois inscriptions : "
-
-        "\"La clé n'est pas dans la cage rouge.\" "
-
-        "\"La clé est dans la cage rouge.\" "
-
-        "\"La clé n'est pas dans la cage bleue.\" "
-
-        "Une seule de ces affirmations est vraie. "
-
-        "Dans quelle cage se trouve la clé ?"
+        "La dernière console affiche : "
+        "'1 clé, 3 batteries, 4 cartes, 5 vis et 6 ampoules. "
+        "Le code est calculé selon la formule : ((ampoules + vis) × cartes) - (batteries + clé). "
+        "Le système attend la valeur exacte.'"
     ),
-
-    secret_code="BLEUE",
-
+    secret_code="40",
     hints=[
-        "Une seule affirmation est vraie.",
-        "Testez les trois possibilités.",
-        "Si la clé est dans la cage bleue, une seule affirmation est vraie."
+        "Remplace les mots par les nombres : 6 + 5 = 11, puis × 4.",
+        "Ensuite, retirez 3 + 1.",
+        "Le code final est un nombre à deux chiffres.",
     ],
 )
 
@@ -234,24 +156,24 @@ puzzle_4 = CodePuzzle(
 
 room_4 = Room(
     id="room_4",
-
-    name="La salle des cages",
-
+    name="Le cœur du laboratoire",
     description=(
-        "Vous arrivez dans une immense salle contenant plusieurs cages. "
-
-        "Certaines sont vides, tandis que d'autres contiennent "
-        "des dinosaures endormis. "
-
-        "Trois cages attirent votre attention. "
-
-        "Une clé se trouve dans l'une d'elles, mais vous devez déterminer "
-        "laquelle avant de pouvoir atteindre la sortie."
+        "Vous arrivez au cœur du complexe. Les machines sont silencieuses, les lumières "
+        "tremblent autour d'un noyau central. Un terminal a remplacé la dernière porte, "
+        "et il exige le bon calcul pour libérer votre sortie."
     ),
-
-    puzzles=[
-        puzzle_4
-    ],
-
+    puzzles=[puzzle_4],
     time_limit=900,
 )
+
+
+# ============================================================
+# ALL ROOMS
+# ============================================================
+
+rooms = {
+    room_1.id: room_1,
+    room_2.id: room_2,
+    room_3.id: room_3,
+    room_4.id: room_4,
+}
