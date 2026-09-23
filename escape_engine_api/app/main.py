@@ -13,7 +13,10 @@ class Answer(BaseModel):
 
 @app.get("/")
 def home():
-    return {"message": "Bienvenue sur l'API pour mon super escape game!", "jeu": "/rooms"}
+    return {
+        "message": "Bienvenue sur l'API pour mon super escape game!",
+        "jeu": "/rooms",
+    }
 
 
 @app.get("/rooms")
@@ -45,4 +48,10 @@ def answer_puzzle(room_id: str, puzzle_id: str, body: Answer):
     puzzle = next((p for p in room.puzzles if p.id == puzzle_id), None)
     if puzzle is None:
         raise HTTPException(status_code=404, detail="Énigme introuvable")
-    return {"correct": puzzle.check_solution(body.answer)}
+
+    is_correct = puzzle.check_solution(body.answer)
+    if is_correct:
+        print("correct: True")
+        print()
+
+    return {"correct": is_correct}
