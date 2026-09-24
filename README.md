@@ -116,7 +116,7 @@ chmod +x test.sh
 ./test.sh
 ```
 
-Le script utilise `curl` et `python3` (bibliothèque standard uniquement). Il couvre les routes actives, les codes HTTP d'erreur, les réponses invalides et un parcours complet des quatre salles. Pour que le contrôle du verrouillage initial soit déterministe, redémarrer le serveur juste avant le script. L'adresse peut être changée ainsi :
+Le script utilise `curl` et vérifie les codes HTTP des routes actives, les erreurs attendues, les réponses invalides et un parcours complet des quatre salles. Pour que le contrôle du verrouillage initial soit déterministe, redémarrer le serveur juste avant le script. L'adresse peut être changée ainsi :
 
 ```bash
 BASE_URL=http://127.0.0.1:8001 ./test.sh
@@ -132,4 +132,3 @@ Le test modifie la progression en mémoire du serveur en résolvant les énigmes
 - Les classes de temps et d'objets ne sont pas reliées aux routes.
 - Les réponses API sont sensibles à la casse, contrairement au mode terminal.
 - Le routeur joueurs est isolé et contient les problèmes décrits ci-dessus.
-
