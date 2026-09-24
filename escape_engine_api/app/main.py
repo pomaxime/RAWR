@@ -10,6 +10,7 @@ rooms = [room_1, room_2, room_3, room_4]
 progress = {
     "unlocked_index": 0,
     "completed": [],
+    "keys": [],
 }
 game_timer = Time.from_room(room_1)
 
@@ -28,7 +29,10 @@ def can_access_room(room_id: str) -> bool:
     room_index = get_room_index(room_id)
     if room_index is None:
         return False
-    return room_index <= progress["unlocked_index"]
+    room = rooms[room_index]
+    return room.required_key_id is None or any(
+        item["id"] == room.required_key_id for item in progress["keys"]
+    )
 
 
 @app.get("/")
@@ -44,10 +48,16 @@ def get_progress():
     return {
         "unlocked_index": progress["unlocked_index"],
         "completed": progress["completed"],
+        "keys": progress["keys"],
         "remaining_time": game_timer.remaining(),
-        "next_room": rooms[progress["unlocked_index"]].id
-        if progress["unlocked_index"] < len(rooms)
-        else None,
+        "next_room": next(
+            (
+                room.id
+                for room in rooms
+                if can_access_room(room.id) and room.id not in progress["completed"]
+            ),
+            None,
+        ),
     }
 
 
@@ -58,8 +68,7 @@ def get_rooms():
             "id": r.id,
             "name": r.name,
             "description": r.description,
-            "locked": get_room_index(r.id) is not None
-            and get_room_index(r.id) > progress["unlocked_index"],
+            "locked": not can_access_room(r.id),
         }
         for r in rooms
     ]
@@ -85,6 +94,7 @@ def get_room(room_id: str):
             {"id": p.id, "name": p.name, "description": p.description, "hints": p.hints}
             for p in room.puzzles
         ],
+        "required_key_id": room.required_key_id,
     }
 
 
@@ -104,19 +114,26 @@ def answer_puzzle(room_id: str, puzzle_id: str, body: Answer):
         raise HTTPException(status_code=404, detail="Énigme introuvable")
 
     is_correct = puzzle.check_solution(body.answer)
+    obtained_key = None
     if is_correct:
         room_index = get_room_index(room_id)
         if room_index is not None and room_id not in progress["completed"]:
             progress["completed"].append(room_id)
+        if room.reward_key and not any(
+            item["id"] == room.reward_key.id for item in progress["keys"]
+        ):
+            obtained_key = room.reward_key.to_dict()
+            progress["keys"].append(obtained_key)
         if room_index is not None and room_index + 1 < len(rooms):
             progress["unlocked_index"] = room_index + 1
-            game_timer.continue_to_room(rooms[room_index + 1])
+            if can_access_room(rooms[room_index + 1].id):
+                game_timer.continue_to_room(rooms[room_index + 1])
         else:
             progress["unlocked_index"] = len(rooms) - 1
         print("correct: True")
         print()
 
-    return {"correct": is_correct, "progress": progress}
+    return {"correct": is_correct, "obtained_key": obtained_key, "progress": progress}
 
 
 def play_game() -> None:
@@ -127,7 +144,7 @@ def play_game() -> None:
     print("Commandes : aide, quitter")
 
     for index, room in enumerate(rooms):
-        if index > progress["unlocked_index"]:
+        if not can_access_room(room.id):
             print(
                 f"\nLa salle {room.name} est verrouillée. Vous devez terminer la salle précédente."
             )
@@ -165,6 +182,10 @@ def play_game() -> None:
                     progress["unlocked_index"] = index + 1
                 else:
                     progress["unlocked_index"] = len(rooms) - 1
+                if room.reward_key and not any(
+                    item["id"] == room.reward_key.id for item in progress["keys"]
+                ):
+                    progress["keys"].append(room.reward_key.to_dict())
                 print(
                     f"La clé de la salle {room.name} a été validée. La salle suivante est déverrouillée."
                 )

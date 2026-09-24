@@ -1,5 +1,6 @@
 from .code_puzzle import CodePuzzle
 from .game_element import GameElement
+from .item import code, kaillou, key, os
 
 
 class Room(GameElement):
@@ -12,12 +13,16 @@ class Room(GameElement):
         doors: list | None = None,
         puzzles: list | None = None,
         time_limit: int | None = None,
+        required_key_id: str | None = None,
+        reward_key=None,
     ):
         super().__init__(id, name, description)
         self.Items = Items or []
         self.doors = doors or []
         self.puzzles = puzzles or []
         self.time_limit = time_limit
+        self.required_key_id = required_key_id
+        self.reward_key = reward_key
 
     def to_dict(self):
         return {
@@ -26,6 +31,8 @@ class Room(GameElement):
             "doors": self.doors,
             "puzzles": self.puzzles,
             "time_limit": self.time_limit,
+            "required_key_id": self.required_key_id,
+            "reward_key": self.reward_key.to_dict() if self.reward_key else None,
         }
 
     def add_item(self, item):
@@ -72,6 +79,7 @@ room_1 = Room(
     ),
     puzzles=[puzzle_1],
     time_limit=900,
+    reward_key=key,
 )
 
 puzzle_2 = CodePuzzle(
@@ -107,6 +115,8 @@ room_2 = Room(
     ),
     puzzles=[puzzle_2],
     time_limit=900,
+    required_key_id=key.id,
+    reward_key=kaillou,
 )
 
 puzzle_3 = CodePuzzle(
@@ -143,6 +153,8 @@ room_3 = Room(
     ),
     puzzles=[puzzle_3],
     time_limit=900,
+    required_key_id=kaillou.id,
+    reward_key=os,
 )
 
 puzzle_4 = CodePuzzle(
@@ -184,4 +196,6 @@ room_4 = Room(
     ),
     puzzles=[puzzle_4],
     time_limit=900,
+    required_key_id=os.id,
+    reward_key=code,
 )
