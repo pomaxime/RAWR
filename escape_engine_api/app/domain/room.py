@@ -1,4 +1,5 @@
 from .code_puzzle import CodePuzzle
+from .door import Door
 from .game_element import GameElement
 from .item import code, kaillou, key, os
 
@@ -59,6 +60,14 @@ puzzle_1 = CodePuzzle(
     hints=["Tout vous est donné dans l'ordre des paroles de Véloci Ruben."],
 )
 
+door_1 = Door(
+    id="door_1",
+    name="Porte du laboratoire",
+    description="La porte vers la salle des ordinateurs.",
+    required_item_id=key.id,
+    destination_room_id="room_2",
+)
+
 room_1 = Room(
     id="room_1",
     name="Le laboratoire de Véloci Ruben",
@@ -78,6 +87,7 @@ room_1 = Room(
         "Et oui, dans ce jeu tout peut être bilingue."
     ),
     puzzles=[puzzle_1],
+    doors=[door_1],
     time_limit=900,
     reward_key=key,
 )
@@ -114,6 +124,15 @@ room_2 = Room(
         '"Seul celui qui comprend la suite pourra continuer."'
     ),
     puzzles=[puzzle_2],
+    doors=[
+        Door(
+            id="door_2",
+            name="Porte de la salle des ordinateurs",
+            description="La porte vers la salle de cryptographie.",
+            required_item_id=kaillou.id,
+            destination_room_id="room_3",
+        )
+    ],
     time_limit=900,
     required_key_id=key.id,
     reward_key=kaillou,
@@ -152,6 +171,15 @@ room_3 = Room(
         "par Véloci Ruben."
     ),
     puzzles=[puzzle_3],
+    doors=[
+        Door(
+            id="door_3",
+            name="Porte de la salle de cryptographie",
+            description="La porte vers la salle des cages.",
+            required_item_id=os.id,
+            destination_room_id="room_4",
+        )
+    ],
     time_limit=900,
     required_key_id=kaillou.id,
     reward_key=os,
@@ -195,6 +223,15 @@ room_4 = Room(
         "laquelle avant de pouvoir atteindre la sortie."
     ),
     puzzles=[puzzle_4],
+    doors=[
+        Door(
+            id="door_4",
+            name="Porte de sortie",
+            description="La porte qui mène hors du laboratoire.",
+            required_item_id=code.id,
+            destination_room_id="exit",
+        )
+    ],
     time_limit=900,
     required_key_id=os.id,
     reward_key=code,
