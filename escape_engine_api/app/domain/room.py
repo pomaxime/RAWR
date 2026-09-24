@@ -82,6 +82,7 @@ room_1 = Room(
     ),
     puzzles=[puzzle_1],
     time_limit=900,
+    reward_key=key,
 )
 
 puzzle_2 = CodePuzzle(
@@ -117,6 +118,8 @@ room_2 = Room(
     ),
     puzzles=[puzzle_2],
     time_limit=900,
+    required_key_id=key.id,
+    reward_key=kaillou,
 )
 
 puzzle_3 = CodePuzzle(
@@ -153,6 +156,8 @@ room_3 = Room(
     ),
     puzzles=[puzzle_3],
     time_limit=900,
+    required_key_id=kaillou.id,
+    reward_key=os,
 )
 
 puzzle_4 = CodePuzzle(
@@ -194,4 +199,6 @@ room_4 = Room(
     ),
     puzzles=[puzzle_4],
     time_limit=900,
+    required_key_id=os.id,
+    reward_key=code,
 )

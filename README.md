@@ -27,16 +27,18 @@ escape_engine_api/
 
 ## Ce que fait le jeu actuellement
 
-L'API maintient une progression globale en mémoire. Au démarrage, `room_1` est accessible, les salles suivantes sont verrouillées. Une bonne réponse à l'énigme de la salle courante ajoute son identifiant à `completed` et déverrouille la salle suivante. La progression n'est ni enregistrée sur disque ni séparée par joueur : elle repart de zéro à chaque redémarrage du processus, et tous les clients d'un même processus partagent la même progression.
+L'API maintient une progression globale en mémoire. Au démarrage, `room_1` est accessible sans clé et les salles suivantes sont verrouillées. Résoudre l'énigme d'une salle donne sa clé, qui est ajoutée à l'inventaire et permet d'accéder à la salle suivante. La progression n'est ni enregistrée sur disque ni séparée par joueur : elle repart de zéro à chaque redémarrage du processus, et tous les clients d'un même processus partagent la même progression.
 
-Les quatre salles et leurs codes attendus sont :
+Les quatre salles, leurs codes et leurs clés sont :
 
-| Identifiant | Salle | Énigme | Réponse attendue |
-|---|---|---|---|
-| `room_1` | Le laboratoire de Véloci Ruben | Signification de RAWR | `Raptor Affamé Want Ribs` |
-| `room_2` | La salle des ordinateurs | Suite `2 - 4 - 8 - 16 - ?` | `32` |
-| `room_3` | La salle de cryptographie | César `UDSWRU` décalé de trois | `RAPTOR` |
-| `room_4` | La salle des cages | Déduction sur les trois affirmations | `BLEUE` |
+| Identifiant | Salle | Réponse attendue | Clé obtenue | Ouvre |
+|---|---|---|---|---|
+| `room_1` | Le laboratoire de Véloci Ruben | `Raptor Affamé Want Ribs` | `key1` — Key | `room_2` |
+| `room_2` | La salle des ordinateurs | `32` | `key2` — Kaillou | `room_3` |
+| `room_3` | La salle de cryptographie | `RAPTOR` | `key3` — Os | `room_4` |
+| `room_4` | La salle des cages | `BLEUE` | `key4` — Code | La sortie (à implémenter) |
+
+La réponse à une énigme renvoie la clé nouvellement gagnée dans `obtained_key`. La route `GET /progress` renvoie les clés détenues dans `keys`. Les salles suivantes vérifient l'identifiant de clé requis avant d'autoriser l'accès.
 
 Les réponses par l'API sont comparées exactement (majuscules/minuscules et accents compris). Le mode terminal, lui, compare sans tenir compte de la casse. Les indices sont renvoyés avec les détails de la salle, mais il n'existe pas de route dédiée pour demander un indice.
 
@@ -68,7 +70,7 @@ Toutes les routes ci-dessous appartiennent à `escape_engine_api.app.main:app`.
 | Méthode | Chemin | Fonction |
 |---|---|---|
 | `GET` | `/` | Message d'accueil et lien vers `/rooms` |
-| `GET` | `/progress` | Index déverrouillé, salles terminées et prochaine salle |
+| `GET` | `/progress` | Index, salles terminées, clés détenues, temps restant et prochaine salle accessible |
 | `GET` | `/rooms` | Liste des salles, descriptions et état verrouillé |
 | `GET` | `/rooms/{room_id}` | Détail d'une salle accessible et de ses énigmes/indices |
 | `POST` | `/rooms/{room_id}/puzzles/{puzzle_id}/answer` | Soumet une réponse et renvoie le résultat/la progression |
@@ -126,7 +128,7 @@ Le test modifie la progression en mémoire du serveur en résolvant les énigmes
 
 ## Limites connues du code actuel
 
-- La progression est globale au processus, volatile, sans utilisateur ni persistance.
+- La progression et les clés sont globales au processus, volatiles, sans utilisateur ni persistance.
 - La dernière salle peut être soumise à nouveau; il n'y a pas de notion de partie terminée côté API.
 - Une soumission correcte débloque l'index suivant, mais il n'existe ni inventaire ni contrôle de portes/objets.
 - Les classes de temps et d'objets ne sont pas reliées aux routes.
