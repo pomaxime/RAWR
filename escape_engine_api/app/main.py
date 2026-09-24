@@ -17,7 +17,6 @@ game_timer = Time.from_room(room_1)
 class Answer(BaseModel):
     answer: str
 
-
 def get_room_index(room_id: str):
     for index, room in enumerate(rooms):
         if room.id == room_id:
