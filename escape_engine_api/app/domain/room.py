@@ -199,3 +199,11 @@ room_4 = Room(
     required_key_id=os.id,
     reward_key=code,
 )
+
+
+rooms = {
+    room_1.id: room_1,
+    room_2.id: room_2,
+    room_3.id: room_3,
+    room_4.id: room_4,
+}
