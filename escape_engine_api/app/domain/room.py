@@ -1,6 +1,8 @@
 from .code_puzzle import CodePuzzle
 from .game_element import GameElement
-from .item import code, kaillou, key, os
+from fastapi import APIRouter
+from ..domain.code_puzzle import CodePuzzle
+from ..domain.room import Room
 
 
 class Room(GameElement):
@@ -10,32 +12,33 @@ class Room(GameElement):
         name: str,
         description: str,
         Items: list | None = None,
+        Items: list | None = None,
         doors: list | None = None,
         puzzles: list | None = None,
         time_limit: int | None = None,
-        required_key_id: str | None = None,
-        reward_key=None,
+        time_limit: int | None = None,
     ):
         super().__init__(id, name, description)
+        self.Items = Items or []
         self.Items = Items or []
         self.doors = doors or []
         self.puzzles = puzzles or []
         self.time_limit = time_limit
-        self.required_key_id = required_key_id
-        self.reward_key = reward_key
+        self.time_limit = time_limit
 
     def to_dict(self):
         return {
             **super().to_dict(),
             "Items": self.Items,
+            "Items": self.Items,
             "doors": self.doors,
             "puzzles": self.puzzles,
             "time_limit": self.time_limit,
-            "required_key_id": self.required_key_id,
-            "reward_key": self.reward_key.to_dict() if self.reward_key else None,
+            "time_limit": self.time_limit,
         }
 
     def add_item(self, item):
+        self.Items.append(item)
         self.Items.append(item)
 
     def add_door(self, door):
