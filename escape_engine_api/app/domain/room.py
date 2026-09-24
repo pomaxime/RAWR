@@ -1,4 +1,4 @@
-from ..domain.code_puzzle import CodePuzzle
+from .code_puzzle import CodePuzzle
 from .game_element import GameElement
 
 
@@ -37,9 +37,6 @@ class Room(GameElement):
     def add_puzzle(self, puzzle):
         self.puzzles.append(puzzle)
 
-# ============================================================
-# PUZZLE 1
-# ============================================================
 
 puzzle_1 = CodePuzzle(
     id="puzzle_1",
@@ -54,11 +51,6 @@ puzzle_1 = CodePuzzle(
     secret_code="Raptor Affamé Want Ribs",
     hints=["Tout vous est donné dans l'ordre des paroles de Véloci Ruben."],
 )
-
-
-# ============================================================
-# ROOM 1
-# ============================================================
 
 room_1 = Room(
     id="room_1",
@@ -82,11 +74,6 @@ room_1 = Room(
     time_limit=900,
 )
 
-
-# ============================================================
-# PUZZLE 2
-# ============================================================
-
 puzzle_2 = CodePuzzle(
     id="puzzle_2",
     name="Le terminal du laboratoire",
@@ -107,11 +94,6 @@ puzzle_2 = CodePuzzle(
     ],
 )
 
-
-# ============================================================
-# ROOM 2
-# ============================================================
-
 room_2 = Room(
     id="room_2",
     name="La salle des ordinateurs",
@@ -126,11 +108,6 @@ room_2 = Room(
     puzzles=[puzzle_2],
     time_limit=900,
 )
-
-
-# ============================================================
-# PUZZLE 3
-# ============================================================
 
 puzzle_3 = CodePuzzle(
     id="puzzle_3",
@@ -154,11 +131,6 @@ puzzle_3 = CodePuzzle(
     ],
 )
 
-
-# ============================================================
-# ROOM 3
-# ============================================================
-
 room_3 = Room(
     id="room_3",
     name="La salle de cryptographie",
@@ -172,11 +144,6 @@ room_3 = Room(
     puzzles=[puzzle_3],
     time_limit=900,
 )
-
-
-# ============================================================
-# PUZZLE 4
-# ============================================================
 
 puzzle_4 = CodePuzzle(
     id="puzzle_4",
@@ -204,11 +171,6 @@ puzzle_4 = CodePuzzle(
     ],
 )
 
-
-# ============================================================
-# ROOM 4
-# ============================================================
-
 room_4 = Room(
     id="room_4",
     name="La salle des cages",
@@ -223,4 +185,3 @@ room_4 = Room(
     puzzles=[puzzle_4],
     time_limit=900,
 )
-
