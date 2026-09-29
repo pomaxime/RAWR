@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
 app = FastAPI()
@@ -10,7 +10,7 @@ class Player(BaseModel):
     level: int
 
 
-players = []
+players: list[dict] = []
 
 
 @app.get("/players")
@@ -20,16 +20,16 @@ def get_players():
 
 @app.get("/players/{player_id}")
 def get_player(player_id: int):
-    for player in players:
-        if player["id"] == player_id:
-            return player
-    return "Player not found"
+    player = next((item for item in players if item["id"] == player_id), None)
+    if player is None:
+        raise HTTPException(status_code=404, detail="Player not found")
+    return player
 
 
 @app.post("/players")
 def create_player(player: Player):
-    new_id = max(p["id"] for p in players) + 1
-    new_player = {"id": new_id, **player.model_dump()}
+    next_id = max((item["id"] for item in players), default=0) + 1
+    new_player = {"id": next_id, **player.model_dump()}
     players.append(new_player)
     return new_player
 
@@ -41,13 +41,13 @@ def update_player(player_id: int, player: Player):
             updated_player = {"id": player_id, **player.model_dump()}
             players[index] = updated_player
             return updated_player
-    return "Player not found"
+    raise HTTPException(status_code=404, detail="Player not found")
 
 
 @app.delete("/players/{player_id}")
 def delete_player(player_id: int):
-    for index, player in enumerate(players):
-        if player["id"] == player_id:
+    for index, current_player in enumerate(players):
+        if current_player["id"] == player_id:
             deleted_player = players.pop(index)
             return {"message": "Player deleted", "player": deleted_player}
-    return "Player not found"
+    raise HTTPException(status_code=404, detail="Player not found")

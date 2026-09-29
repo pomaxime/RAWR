@@ -44,6 +44,15 @@ tester 200 GET "/rooms/room_1" ""
 tester 403 GET "/rooms/room_2" ""
 tester 404 GET "/rooms/salle_inconnue" ""
 
+# Vérification de la gestion d'erreur côté API
+error_response=$(curl -sS -X GET "$BASE_URL/rooms/salle_inconnue")
+printf '%s\n' "$error_response" | grep -q '"detail":\s*"Salle introuvable"' || {
+    echo "ERREUR gestion d'erreur : réponse inattendue pour /rooms/salle_inconnue"
+    exit 1
+}
+
+echo "OK     GET /rooms/salle_inconnue : gestion d'erreur confirmée"
+
 # Vérification des erreurs lors de l'envoi d'une réponse.
 tester 404 POST "/rooms/salle_inconnue/puzzles/puzzle_1/answer" '{"answer":"test"}'
 tester 404 POST "/rooms/room_1/puzzles/enigme_inconnue/answer" '{"answer":"test"}'
