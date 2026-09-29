@@ -60,7 +60,7 @@ def can_access_room(room_id: str) -> bool:
 @app.get("/")
 def home():
     return {
-        "message": "Bienvenue sur l'API pour mon super escape game!",
+        "message": "Bienvenue sur l'API de notre Escape Game 'RAWR' !",
         "jeu": "/rooms",
     }
 
