@@ -53,8 +53,10 @@ tester 200 POST "/rooms/room_1/puzzles/puzzle_1/answer" '{"answer":"mauvaise ré
 # Parcours complet : chaque bonne réponse débloque la salle suivante.
 tester 200 POST "/rooms/room_1/puzzles/puzzle_1/answer" '{"answer":"Raptor Affamé Want Ribs"}'
 tester 200 GET "/rooms/room_2" ""
+tester 403 GET "/rooms/room_3" ""
 tester 200 POST "/rooms/room_2/puzzles/puzzle_2/answer" '{"answer":"32"}'
 tester 200 GET "/rooms/room_3" ""
+tester 403 GET "/rooms/room_4" ""
 tester 200 POST "/rooms/room_3/puzzles/puzzle_3/answer" '{"answer":"RAPTOR"}'
 tester 200 GET "/rooms/room_4" ""
 tester 200 POST "/rooms/room_4/puzzles/puzzle_4/answer" '{"answer":"BLEUE"}'
