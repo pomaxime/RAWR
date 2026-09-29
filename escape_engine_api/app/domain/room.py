@@ -1,6 +1,10 @@
+import logging
+
 from .code_puzzle import CodePuzzle
 from .game_element import GameElement
 from .item import code, kaillou, key, os
+
+logger = logging.getLogger(__name__)
 
 
 class Room(GameElement):
@@ -23,6 +27,13 @@ class Room(GameElement):
         self.time_limit = time_limit
         self.required_key_id = required_key_id
         self.reward_key = reward_key
+        logger.debug(
+            "Room '%s' créée: time_limit=%s, required_key_id=%s, puzzles=%s",
+            id,
+            time_limit,
+            required_key_id,
+            [p.id for p in self.puzzles],
+        )
 
     def to_dict(self):
         return {
