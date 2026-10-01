@@ -1,0 +1,75 @@
+COMMANDES POUR LA PRESENTATION DE L'API RAWR
+============================================
+
+Préparation
+-----------
+Ouvrir deux terminaux dans le dossier RAWR :
+/home/maxime/Pyhton-API/RAWR
+
+TERMINAL 1 : démarrer l'API et laisser ce terminal ouvert
+----------------------------------------------------------
+uvicorn escape_engine_api.app.main:app --reload
+
+Pour réinitialiser la partie avant une nouvelle présentation : arrêter le serveur avec Ctrl+C, puis relancer la commande ci-dessus.
+
+TERMINAL 2 : présenter l'API avec curl
+--------------------------------------
+
+1. Afficher le message d'accueil :
+curl -i http://127.0.0.1:8000/
+
+2. Afficher la progression initiale :
+curl -i http://127.0.0.1:8000/progress
+
+3. Lister les salles et leur état :
+curl -i http://127.0.0.1:8000/rooms
+
+4. Consulter la première salle et son puzzle :
+curl -i http://127.0.0.1:8000/rooms/room_1
+
+5. Montrer qu'une salle verrouillée n'est pas accessible au départ (HTTP 403 attendu) :
+curl -i http://127.0.0.1:8000/rooms/room_2
+
+6. Envoyer la bonne réponse au puzzle 1 :
+curl -i -X POST http://127.0.0.1:8000/rooms/room_1/puzzles/puzzle_1/answer -H 'Content-Type: application/json' -d '{"answer":"Raptor Affamé Want Ribs"}'
+
+7. Ouvrir la porte 1 :
+curl -i -X POST http://127.0.0.1:8000/rooms/room_1/doors/door_1/open
+
+8. La salle 2 est maintenant accessible :
+curl -i http://127.0.0.1:8000/rooms/room_2
+
+9. Récupérer les ribs :
+curl -i -X POST http://127.0.0.1:8000/veloci-ruben/ribs
+
+10. Répondre au puzzle 2 :
+curl -i -X POST http://127.0.0.1:8000/rooms/room_2/puzzles/puzzle_2/answer -H 'Content-Type: application/json' -d '{"answer":"32"}'
+
+11. Ouvrir la porte 2, puis consulter la salle 3 :
+curl -i -X POST http://127.0.0.1:8000/rooms/room_2/doors/door_2/open
+curl -i http://127.0.0.1:8000/rooms/room_3
+
+12. Répondre au puzzle 3 :
+curl -i -X POST http://127.0.0.1:8000/rooms/room_3/puzzles/puzzle_3/answer -H 'Content-Type: application/json' -d '{"answer":"RAPTOR"}'
+
+13. Ouvrir la porte 3, puis consulter la salle 4 :
+curl -i -X POST http://127.0.0.1:8000/rooms/room_3/doors/door_3/open
+curl -i http://127.0.0.1:8000/rooms/room_4
+
+14. Répondre au puzzle final :
+curl -i -X POST http://127.0.0.1:8000/rooms/room_4/puzzles/puzzle_4/answer -H 'Content-Type: application/json' -d '{"answer":"BLEUE"}'
+
+15. Ouvrir la dernière porte et vérifier la victoire :
+curl -i -X POST http://127.0.0.1:8000/rooms/room_4/doors/door_4/open
+curl -i http://127.0.0.1:8000/progress
+
+Documentation interactive
+--------------------------
+Ouvrir cette adresse dans un navigateur :
+http://127.0.0.1:8000/docs
+
+Notes
+-----
+- Les commandes de progression doivent être exécutées dans l'ordre : chaque salle se débloque après la précédente.
+- Les réponses HTTP 403 au début sont normales pour les salles encore verrouillées.
+- La progression est conservée en mémoire pendant que le serveur tourne et repart de zéro après son redémarrage.
