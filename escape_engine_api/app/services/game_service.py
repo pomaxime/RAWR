@@ -4,7 +4,12 @@ import logging
 
 from ..domain.room import room_1, room_2, room_3, room_4
 from ..domain.time import Time
-from ..errors import EmptyAnswerError, PuzzleNotFoundError, RoomLockedError, RoomNotFoundError
+from ..errors import (
+    EmptyAnswerError,
+    PuzzleNotFoundError,
+    RoomLockedError,
+    RoomNotFoundError,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -137,6 +142,8 @@ class GameService:
             answer,
         )
         obtained_key = None
+        next_room = None
+        message = "Mauvaise réponse. Essayez encore."
         if is_correct:
             room_index = self.get_room_index(room_id)
             if room_index is not None and room_id not in self.progress["completed"]:
@@ -149,16 +156,39 @@ class GameService:
                 logger.info("Nouvelle clé obtenue: %s", obtained_key)
             if room_index is not None and room_index + 1 < len(self.rooms):
                 self.progress["unlocked_index"] = room_index + 1
-                if self.can_access_room(self.rooms[room_index + 1].id):
-                    self.game_timer.continue_to_room(self.rooms[room_index + 1])
+                following_room = self.rooms[room_index + 1]
+                if self.can_access_room(following_room.id):
+                    self.game_timer.continue_to_room(following_room)
+                    next_room = {
+                        "id": following_room.id,
+                        "name": following_room.name,
+                        "url": f"/rooms/{following_room.id}",
+                    }
                     logger.info(
                         "Timer réinitialisé et salle suivante ouverte: %s",
-                        self.rooms[room_index + 1].id,
+                        following_room.id,
                     )
             else:
                 self.progress["unlocked_index"] = len(self.rooms) - 1
+            found_item = room.reward_key.name if room.reward_key else "l'objet de la salle"
+            if next_room:
+                message = (
+                    f"Vous avez réussi et trouvé {found_item}. "
+                    f"Vous pouvez entrer dans la salle suivante : {next_room['name']}."
+                )
+            else:
+                message = (
+                    f"Vous avez réussi et trouvé {found_item}. "
+                    "Vous pouvez maintenant ouvrir la porte de sortie."
+                )
 
-        result = {"correct": is_correct, "obtained_key": obtained_key, "progress": self.progress}
+        result = {
+            "correct": is_correct,
+            "message": message,
+            "obtained_key": obtained_key,
+            "next_room": next_room,
+            "progress": self.progress,
+        }
         logger.debug("Réponse traitée: %s", result)
         return result
 

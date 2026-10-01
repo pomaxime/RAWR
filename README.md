@@ -38,7 +38,7 @@ Les quatre salles, leurs codes et leurs clés sont :
 | `room_3` | La salle de cryptographie | `RAPTOR` | `key3` — Os | `room_4` |
 | `room_4` | La salle des cages | `BLEUE` | `key4` — Code | La sortie (à implémenter) |
 
-La réponse à une énigme renvoie la clé nouvellement gagnée dans `obtained_key`. La route `GET /progress` renvoie les clés détenues dans `keys`. Les salles suivantes vérifient l'identifiant de clé requis avant d'autoriser l'accès.
+La réponse à une énigme renvoie la clé nouvellement gagnée dans `obtained_key`, un message de réussite mentionnant l'objet trouvé et `next_room` avec l'identifiant, le nom et l'URL de la salle désormais accessible. Pour la dernière salle, `next_room` vaut `null` et le message invite à ouvrir la porte de sortie. La route `GET /progress` renvoie les clés détenues dans `keys`. Les salles suivantes vérifient l'identifiant de clé requis avant d'autoriser l'accès.
 
 Les réponses par l'API sont comparées exactement (majuscules/minuscules et accents compris). Le mode terminal, lui, compare sans tenir compte de la casse. Les indices sont renvoyés avec les détails de la salle, mais il n'existe pas de route dédiée pour demander un indice.
 
