@@ -168,6 +168,8 @@ def answer_puzzle(room_id: str, puzzle_id: str, body: Answer):
 
     is_correct = puzzle.check_solution(body.answer)
     obtained_key = None
+    next_room = None
+    message = "Mauvaise réponse. Essayez encore."
     if is_correct:
         room_index = get_room_index(room_id)
         if room_index is not None and room_id not in progress["completed"]:
@@ -180,14 +182,37 @@ def answer_puzzle(room_id: str, puzzle_id: str, body: Answer):
         progress["ribs"] += 1
         if room_index is not None and room_index + 1 < len(rooms):
             progress["unlocked_index"] = room_index + 1
-            if can_access_room(rooms[room_index + 1].id):
-                game_timer.continue_to_room(rooms[room_index + 1])
+            following_room = rooms[room_index + 1]
+            if can_access_room(following_room.id):
+                game_timer.continue_to_room(following_room)
+                next_room = {
+                    "id": following_room.id,
+                    "name": following_room.name,
+                    "url": f"/rooms/{following_room.id}",
+                }
         else:
             progress["unlocked_index"] = len(rooms) - 1
+        found_item = room.reward_key.name if room.reward_key else "l'objet de la salle"
+        if next_room:
+            message = (
+                f"Vous avez réussi et trouvé {found_item}. "
+                f"Vous pouvez entrer dans la salle suivante : {next_room['name']}."
+            )
+        else:
+            message = (
+                f"Vous avez réussi et trouvé {found_item}. "
+                "Vous pouvez maintenant ouvrir la porte de sortie."
+            )
         print("correct: True")
         print()
 
-    return {"correct": is_correct, "obtained_key": obtained_key, "progress": progress}
+    return {
+        "correct": is_correct,
+        "message": message,
+        "obtained_key": obtained_key,
+        "next_room": next_room,
+        "progress": progress,
+    }
 
 
 @app.post("/veloci-ruben/ribs")

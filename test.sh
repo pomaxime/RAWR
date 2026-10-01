@@ -61,6 +61,22 @@ tester 200 POST "/rooms/room_1/puzzles/puzzle_1/answer" '{"answer":"mauvaise ré
 
 # Parcours complet : chaque bonne réponse débloque la salle suivante.
 tester 200 POST "/rooms/room_1/puzzles/puzzle_1/answer" '{"answer":"Raptor Affamé Want Ribs"}'
+
+# La réussite indique l'objet trouvé et fournit le lien vers la salle suivante.
+success_response=$(curl -sS -X POST \
+    -H "Content-Type: application/json" \
+    -d '{"answer":"Raptor Affamé Want Ribs"}' \
+    "$BASE_URL/rooms/room_1/puzzles/puzzle_1/answer")
+printf '%s\n' "$success_response" | grep -q '"message":"Vous avez réussi et trouvé Key\.' || {
+    echo "ERREUR message de réussite : l'objet trouvé n'est pas indiqué"
+    exit 1
+}
+printf '%s\n' "$success_response" | grep -q '"next_room":{"id":"room_2".*"url":"/rooms/room_2"}' || {
+    echo "ERREUR navigation : la salle suivante n'est pas indiquée"
+    exit 1
+}
+echo "OK     Réussite room_1 : objet trouvé et salle suivante indiqués"
+
 tester 200 GET "/rooms/room_2" ""
 tester 403 GET "/rooms/room_3" ""
 tester 200 POST "/rooms/room_2/puzzles/puzzle_2/answer" '{"answer":"32"}'
