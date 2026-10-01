@@ -1,8 +1,11 @@
+import logging
+
 from .code_puzzle import CodePuzzle
+from .door import Door
 from .game_element import GameElement
-from fastapi import APIRouter
-from ..domain.code_puzzle import CodePuzzle
-from ..domain.room import Room
+from .item import code, kaillou, key, os
+
+logger = logging.getLogger(__name__)
 
 
 class Room(GameElement):
@@ -12,33 +15,39 @@ class Room(GameElement):
         name: str,
         description: str,
         Items: list | None = None,
-        Items: list | None = None,
         doors: list | None = None,
         puzzles: list | None = None,
         time_limit: int | None = None,
-        time_limit: int | None = None,
+        required_key_id: str | None = None,
+        reward_key=None,
     ):
         super().__init__(id, name, description)
-        self.Items = Items or []
         self.Items = Items or []
         self.doors = doors or []
         self.puzzles = puzzles or []
         self.time_limit = time_limit
-        self.time_limit = time_limit
+        self.required_key_id = required_key_id
+        self.reward_key = reward_key
+        logger.debug(
+            "Room '%s' créée: time_limit=%s, required_key_id=%s, puzzles=%s",
+            id,
+            time_limit,
+            required_key_id,
+            [p.id for p in self.puzzles],
+        )
 
     def to_dict(self):
         return {
             **super().to_dict(),
             "Items": self.Items,
-            "Items": self.Items,
             "doors": self.doors,
             "puzzles": self.puzzles,
             "time_limit": self.time_limit,
-            "time_limit": self.time_limit,
+            "required_key_id": self.required_key_id,
+            "reward_key": self.reward_key.to_dict() if self.reward_key else None,
         }
 
     def add_item(self, item):
-        self.Items.append(item)
         self.Items.append(item)
 
     def add_door(self, door):
@@ -62,6 +71,14 @@ puzzle_1 = CodePuzzle(
     hints=["Tout vous est donné dans l'ordre des paroles de Véloci Ruben."],
 )
 
+door_1 = Door(
+    id="door_1",
+    name="Porte du laboratoire",
+    description="La porte vers la salle des ordinateurs.",
+    required_item_id=key.id,
+    destination_room_id="room_2",
+)
+
 room_1 = Room(
     id="room_1",
     name="Le laboratoire de Véloci Ruben",
@@ -81,6 +98,7 @@ room_1 = Room(
         "Et oui, dans ce jeu tout peut être bilingue."
     ),
     puzzles=[puzzle_1],
+    doors=[door_1],
     time_limit=900,
     reward_key=key,
 )
@@ -117,6 +135,15 @@ room_2 = Room(
         '"Seul celui qui comprend la suite pourra continuer."'
     ),
     puzzles=[puzzle_2],
+    doors=[
+        Door(
+            id="door_2",
+            name="Porte de la salle des ordinateurs",
+            description="La porte vers la salle de cryptographie.",
+            required_item_id=kaillou.id,
+            destination_room_id="room_3",
+        )
+    ],
     time_limit=900,
     required_key_id=key.id,
     reward_key=kaillou,
@@ -155,6 +182,15 @@ room_3 = Room(
         "par Véloci Ruben."
     ),
     puzzles=[puzzle_3],
+    doors=[
+        Door(
+            id="door_3",
+            name="Porte de la salle de cryptographie",
+            description="La porte vers la salle des cages.",
+            required_item_id=os.id,
+            destination_room_id="room_4",
+        )
+    ],
     time_limit=900,
     required_key_id=kaillou.id,
     reward_key=os,
@@ -198,7 +234,24 @@ room_4 = Room(
         "laquelle avant de pouvoir atteindre la sortie."
     ),
     puzzles=[puzzle_4],
+    doors=[
+        Door(
+            id="door_4",
+            name="Porte de sortie",
+            description="La porte qui mène hors du laboratoire.",
+            required_item_id=code.id,
+            destination_room_id="exit",
+        )
+    ],
     time_limit=900,
     required_key_id=os.id,
     reward_key=code,
 )
+
+
+rooms = {
+    room_1.id: room_1,
+    room_2.id: room_2,
+    room_3.id: room_3,
+    room_4.id: room_4,
+}

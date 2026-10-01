@@ -48,15 +48,15 @@ class Time(Item):
     def remaining(self):
         return max(0, self.duration - int(self.elapsed()))
 
+    def add_time(self, seconds: int):
+        self.duration = self.remaining() + seconds
+        self.start_time = time_module.monotonic()
+        self.end_time = None
+        self.running = True
+
     def continue_to_room(self, room, items=()):
         remaining_time = self.remaining()
-        ribs_bonus = sum(
-            item.time_add
-            for item in items
-            if getattr(item, "item_type", None) == "ribs"
-        )
-
-        self.duration = remaining_time + ribs_bonus
+        self.duration = remaining_time
         self.start_time = None
         self.end_time = None
         self.running = False
